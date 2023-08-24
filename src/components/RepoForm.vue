@@ -1,0 +1,171 @@
+<template>
+    <div class="repo-form">
+        <h1>AI-powered readme generator for GitHub repositories</h1>
+        <form @submit.prevent="handleSubmit">
+            <label hidden for="repository-url">GitHub repository URL</label>
+            <input
+                v-model="repositoryUrl"
+                class="input-primary"
+                :class="{ 'input-error': !repositoryUrlIsValid }"
+                id="repository-url"
+                type="text"
+                placeholder="Repository URL..."
+                @blur="validateRepositoryUrl"
+            />
+            <div>
+                <label for="additional-info">Additional information</label>
+                <textarea
+                    v-model="additionalInfo"
+                    class="input-primary"
+                    :class="{ 'input-error': !additionalInfoIsValid }"
+                    id="additional-info"
+                    placeholder="e.g. required environment variables, how to run the project, etc."
+                ></textarea>
+                <p v-if="!additionalInfoIsValid" class="error-message">
+                    Character limit exceeded ({{ additionalInfo.length }} / 2000)
+                </p>
+            </div>
+            <button class="btn-primary">Generate readme</button>
+        </form>
+    </div>
+</template>
+
+<script lang="ts">
+import { repoFormStore } from '../store/repoFormStore';
+
+export default {
+    props: {
+        repoUrl: {
+            type: String,
+            default: '',
+        },
+    },
+    data() {
+        return {
+            repositoryUrl: this.repoUrl,
+            repositoryUrlIsValid: true,
+            additionalInfo: '',
+            additionalInfoIsValid: true,
+        };
+    },
+    methods: {
+        handleSubmit() {
+            this.validateRepositoryUrl();
+            this.validateAdditionalInfo();
+            console.log('URL: ', this.repositoryUrl);
+            console.log('Additional info: ', this.additionalInfo);
+            if (this.repositoryUrlIsValid && this.additionalInfoIsValid) {
+                repoFormStore.setRepoUrl(this.repositoryUrl);
+                repoFormStore.processRequest();
+            }
+        },
+        validateRepositoryUrl() {
+            const githubRepoRegex = /^(?:https?:\/\/)?github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\/)?/;
+            this.repositoryUrlIsValid = githubRepoRegex.test(this.repositoryUrl);
+        },
+        validateAdditionalInfo() {
+            if (this.additionalInfo.length > 2000) {
+                this.additionalInfoIsValid = false;
+            } else {
+                this.additionalInfoIsValid = true;
+            }
+        },
+    },
+    watch: {
+        additionalInfo() {
+            this.validateAdditionalInfo();
+        },
+        repositoryUrl() {
+            if (!this.repositoryUrlIsValid) {
+                this.validateRepositoryUrl();
+            }
+        },
+    },
+};
+</script>
+
+<style scoped>
+.repo-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--sky-900);
+
+    & h1 {
+        text-wrap: balance;
+        padding: 0 1.5rem;
+        text-align: center;
+        margin: 0;
+        font-size: 2.25rem;
+        font-weight: 500;
+    }
+
+    & form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 3rem;
+        gap: 1.5rem;
+        width: 50rem;
+
+        & button {
+            align-self: end;
+        }
+
+        > div {
+            width: 100%;
+        }
+
+        & label:not([hidden]) {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        & input {
+            height: 5rem;
+        }
+
+        & textarea {
+            height: 12rem;
+            padding: 1rem 2rem;
+            resize: none;
+            font-size: 1.5rem;
+        }
+    }
+}
+
+*[data-theme='dark'] .repo-form {
+    color: var(--sky-100);
+}
+
+@media only screen and (max-width: 1024px) {
+    .repo-form {
+        & h1 {
+            font-size: 2rem;
+        }
+
+        & form {
+            width: min(calc(100% - 4rem), 40rem);
+        }
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .repo-form {
+        & h1 {
+            font-size: 1.5rem;
+        }
+
+        & form {
+            margin-top: 2rem;
+
+            & textarea {
+                height: 6rem;
+                font-size: 1.25rem;
+            }
+        }
+    }
+}
+</style>

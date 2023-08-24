@@ -1,0 +1,69 @@
+<script lang="ts">
+import OgmaHeader from './components/OgmaHeader.vue';
+import RepoForm from './components/RepoForm.vue';
+import { repoFormStore } from './store/repoFormStore';
+
+export default {
+    data() {
+        return {
+            repoFormStore,
+        };
+    },
+    components: {
+        OgmaHeader,
+        RepoForm,
+    },
+};
+</script>
+
+<template>
+    <OgmaHeader />
+    <section>
+        <Transition>
+            <RepoForm v-if="!repoFormStore.isProcessing" :repo-url="repoFormStore.repoUrl" />
+        </Transition>
+    </section>
+</template>
+
+<style scoped>
+section {
+    display: flex;
+    flex-direction: column;
+    padding-top: 8rem;
+    padding-bottom: 2rem;
+    width: 100vw;
+    min-height: calc(100vh - 10rem);
+    background: url(./assets/bg-ogma.webp) rgba(125, 211, 252, 1);
+    background-size: cover;
+    background-blend-mode: screen;
+}
+
+*[data-theme='dark'] section {
+    background: url(./assets/bg-ogma.webp) #062437;
+    background-size: cover;
+    background-blend-mode: multiply;
+}
+
+@media only screen and (max-width: 1024px) {
+    section {
+        justify-content: center;
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    section {
+        padding-top: 6rem;
+        min-height: calc(100vh - 8rem);
+    }
+}
+
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+</style>
