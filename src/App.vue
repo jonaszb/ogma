@@ -2,6 +2,7 @@
 import OgmaHeader from './components/header/OgmaHeader.vue';
 import RepoForm from './components/RepoForm.vue';
 import MarkdownEditor from './components/MarkdownEditor.vue';
+import ProgressIndicator from './components/ProgressIndicator.vue';
 import { repoFormStore } from './store/repoFormStore';
 
 export default {
@@ -14,6 +15,7 @@ export default {
         OgmaHeader,
         RepoForm,
         MarkdownEditor,
+        ProgressIndicator,
     },
 };
 </script>
@@ -23,6 +25,7 @@ export default {
     <section>
         <Transition mode="out-in" appear>
             <MarkdownEditor v-if="!!repoFormStore.markdownContent" />
+            <ProgressIndicator v-else-if="repoFormStore.isProcessing" />
             <RepoForm v-else-if="!repoFormStore.isProcessing" :repo-url="repoFormStore.repoUrl" />
         </Transition>
     </section>

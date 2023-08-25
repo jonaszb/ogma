@@ -71,14 +71,24 @@ int main() {
 `;
 
 export const repoFormStore = reactive({
-    markdownContent: '',
+    markdownContent: mdValue,
     repoUrl: '',
     isProcessing: false,
+    validatedRepo: false,
+    fetchedRepo: false,
     processRequest() {
         this.isProcessing = true;
+        setTimeout(() => (this.validatedRepo = true), 1500);
+        setTimeout(() => {
+            this.fetchedRepo = true;
+        }, 3000);
         setTimeout(() => {
             this.setMarkdownContent(mdValue);
             this.isProcessing = false;
+            setTimeout(() => {
+                this.validatedRepo = false;
+                this.fetchedRepo = false;
+            }, 500);
         }, 5000);
     },
     setRepoUrl(repoUrl: string) {
