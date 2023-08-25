@@ -71,7 +71,7 @@ int main() {
 `;
 
 export const repoFormStore = reactive({
-    markdownContent: mdValue,
+    markdownContent: '',
     repoUrl: '',
     isProcessing: false,
     validatedRepo: false,
