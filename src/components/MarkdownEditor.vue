@@ -20,6 +20,8 @@ export default {
     data() {
         return {
             markdown: repoFormStore.markdownContent,
+            showClipboardPopover: false,
+            clipboardTimer: 0,
         };
     },
 
@@ -29,7 +31,12 @@ export default {
             repoFormStore.setMarkdownContent('');
         },
         copyMarkdownToClipboard() {
+            clearTimeout(this.clipboardTimer);
             navigator.clipboard.writeText(this.markdown);
+            this.showClipboardPopover = true;
+            this.clipboardTimer = setTimeout(() => {
+                this.showClipboardPopover = false;
+            }, 2000);
         },
     },
     computed: {
@@ -55,6 +62,7 @@ export default {
             </button>
             <button @click="clearMarkdown"><CrossIcon /></button>
         </div>
+        <span class="popover" :class="showClipboardPopover && 'active'">Copied to clipboard</span>
     </div>
 </template>
 
@@ -116,6 +124,27 @@ export default {
             background-color: var(--sky-100);
             filter: brightness(0.9);
         }
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+
+    .popover {
+        position: absolute;
+        right: 0.5rem;
+        top: -2rem;
+        font-size: 0.75rem;
+        padding: 0.2rem 0.5rem;
+        background-color: var(--sky-100);
+        border-radius: 2px;
+        border: 1px solid var(--sky-200);
+        box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.1);
+        color: var(--sky-950);
+        display: none;
+
+        &.active {
+            display: block;
+        }
     }
 }
 
@@ -137,6 +166,12 @@ export default {
             background-color: var(--sky-900);
             filter: brightness(1.1);
         }
+    }
+
+    .popover {
+        background-color: var(--sky-950);
+        border: 1px solid var(--sky-900);
+        color: var(--sky-100);
     }
 }
 
