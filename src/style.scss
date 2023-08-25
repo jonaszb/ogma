@@ -1,4 +1,12 @@
+@use 'sass:meta';
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500&display=swap');
+
+*[data-theme='light'] {
+    @include meta.load-css('highlight.js/styles/github');
+}
+*[data-theme='dark'] {
+    @include meta.load-css('highlight.js/styles/github-dark');
+}
 
 :root {
     font-family: 'Raleway', sans-serif;

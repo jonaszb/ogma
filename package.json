@@ -9,11 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/marked": "^5.0.1",
+    "highlight.js": "^11.8.0",
+    "marked": "^7.0.4",
+    "marked-highlight": "^2.0.4",
     "vue": "^3.3.4"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.197",
     "@vitejs/plugin-vue": "^4.2.3",
+    "sass": "^1.66.1",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vue-tsc": "^1.8.5"

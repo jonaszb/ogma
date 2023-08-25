@@ -1,6 +1,7 @@
 <script lang="ts">
-import OgmaHeader from './components/OgmaHeader.vue';
+import OgmaHeader from './components/header/OgmaHeader.vue';
 import RepoForm from './components/RepoForm.vue';
+import MarkdownEditor from './components/MarkdownEditor.vue';
 import { repoFormStore } from './store/repoFormStore';
 
 export default {
@@ -12,6 +13,7 @@ export default {
     components: {
         OgmaHeader,
         RepoForm,
+        MarkdownEditor,
     },
 };
 </script>
@@ -19,8 +21,9 @@ export default {
 <template>
     <OgmaHeader />
     <section>
-        <Transition>
-            <RepoForm v-if="!repoFormStore.isProcessing" :repo-url="repoFormStore.repoUrl" />
+        <Transition mode="out-in" appear>
+            <MarkdownEditor v-if="!!repoFormStore.markdownContent" />
+            <RepoForm v-else-if="!repoFormStore.isProcessing" :repo-url="repoFormStore.repoUrl" />
         </Transition>
     </section>
 </template>
@@ -28,6 +31,7 @@ export default {
 <style scoped>
 section {
     display: flex;
+    align-items: center;
     flex-direction: column;
     padding-top: 8rem;
     padding-bottom: 2rem;

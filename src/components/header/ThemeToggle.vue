@@ -1,12 +1,19 @@
 <template>
     <button id="theme-toggle" @click="toggleTheme()">
-        <img v-if="userTheme === 'light'" src="../assets/sun.svg" alt="Toggle dark mode" />
-        <img v-else src="../assets/moon.svg" alt="Toggle light mode" />
+        <SunIcon v-if="userTheme === 'light'" />
+        <MoonIcon v-else />
     </button>
 </template>
 
 <script lang="ts">
+import SunIcon from '../icons/SunIcon.vue';
+import MoonIcon from '../icons/MoonIcon.vue';
+
 export default {
+    components: {
+        SunIcon,
+        MoonIcon,
+    },
     mounted() {
         const initUserTheme = this.getTheme() || this.getMediaPreference();
         this.userTheme = initUserTheme;
@@ -56,5 +63,13 @@ button {
     border: none;
     cursor: pointer;
     padding: 0;
+}
+
+svg {
+    fill: var(--sky-900);
+}
+
+[data-theme='dark'] svg {
+    fill: var(--sky-50);
 }
 </style>
