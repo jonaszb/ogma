@@ -32,6 +32,7 @@ export default {
 p {
     font-size: 4rem;
     font-weight: 300;
+    text-align: center;
 }
 
 .v-enter-active,
@@ -46,5 +47,12 @@ p {
 
 *[data-theme='dark'] .progress-wrapper {
     color: var(--sky-100);
+}
+
+@media only screen and (max-width: 764px) {
+    p {
+        font-size: 3rem;
+        margin-top: 0;
+    }
 }
 </style>
