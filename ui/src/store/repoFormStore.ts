@@ -1,95 +1,20 @@
 import { reactive } from 'vue';
 
-const mdValue = `# Fake Project
-
-Welcome to the Fake Project! This is a completely fictional project created for the sole purpose of demonstrating code snippets in various programming languages.
-
-## Table of Contents
-
--   [Introduction](#introduction)
--   [Languages](#languages)
-    -   [Python](#python)
-    -   [JavaScript](#javascript)
-    -   [Java](#java)
-    -   [C++](#cpp)
-
-## Introduction
-
-The Fake Project is an imaginary initiative that showcases snippets of code in different programming languages. It has no real-world functionality or purpose other than providing examples of code in action. Feel free to explore the snippets below!
-
-## Languages
-
-### Python
-
-\`\`\`python
-def factorial(n):
-    if n == 0:
-        return 1
-    else:
-        return n * factorial(n - 1)
-
-print(factorial(5))  # Output: 120
-\`\`\`
-
-### JavaScript
-
-\`\`\`javascript
-function fibonacci(n) {
-    if (n <= 1) {
-        return n;
-    } else {
-        return fibonacci(n - 1) + fibonacci(n - 2);
-    }
-}
-
-console.log(fibonacci(6)); // Output: 8
-\`\`\`
-
-### Java
-
-\`\`\`java
-public class FakeProject {
-    public static void main(String[] args) {
-        String message = "Hello, Java!";
-        System.out.println(message);
-    }
-}
-\`\`\`
-
-### C++
-
-\`\`\`cpp
-#include <iostream>
-using namespace std;
-
-int main() {
-    int num = 42;
-    cout << "The answer to life, the universe, and everything: " << num << endl;
-    return 0;
-}
-\`\`\`
-`;
-
 export const repoFormStore = reactive({
     markdownContent: '',
     repoUrl: '',
     isProcessing: false,
     validatedRepo: false,
     fetchedRepo: false,
-    processRequest() {
-        this.isProcessing = true;
-        setTimeout(() => (this.validatedRepo = true), 1500);
-        setTimeout(() => {
-            this.fetchedRepo = true;
-        }, 3000);
-        setTimeout(() => {
-            this.setMarkdownContent(mdValue);
-            this.isProcessing = false;
-            setTimeout(() => {
-                this.validatedRepo = false;
-                this.fetchedRepo = false;
-            }, 500);
-        }, 5000);
+    status: '',
+    setStatus(status: string) {
+        this.status = status;
+    },
+    resetProgress() {
+        this.isProcessing = false;
+        this.validatedRepo = false;
+        this.fetchedRepo = false;
+        this.setStatus('');
     },
     setRepoUrl(repoUrl: string) {
         this.repoUrl = repoUrl;

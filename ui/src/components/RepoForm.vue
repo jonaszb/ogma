@@ -49,14 +49,53 @@ export default {
         };
     },
     methods: {
-        handleSubmit() {
+        async handleSubmit() {
             this.validateRepositoryUrl();
             this.validateAdditionalInfo();
-            console.log('URL: ', this.repositoryUrl);
-            console.log('Additional info: ', this.additionalInfo);
             if (this.repositoryUrlIsValid && this.additionalInfoIsValid) {
                 repoFormStore.setRepoUrl(this.repositoryUrl);
-                repoFormStore.processRequest();
+                repoFormStore.isProcessing = true;
+                try {
+                    const response = await fetch('/api/generate/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            url: this.repositoryUrl,
+                            info: this.additionalInfo,
+                        }),
+                    });
+                    const data = await response.json();
+                    this.listenForUpdates(data.task_id);
+                } catch (error) {
+                    console.error('There was an error:', error);
+                    repoFormStore.isProcessing = false;
+                }
+            }
+        },
+        listenForUpdates(task_id: string) {
+            const eventSource = new EventSource(`/api/events/${task_id}/`);
+            eventSource.onmessage = (event) => {
+                if (typeof event.data !== 'string') return;
+                repoFormStore.setStatus(event.data);
+                if (event.data.toLocaleLowerCase().startsWith('validated')) repoFormStore.validatedRepo = true;
+                if (event.data.toLocaleLowerCase().startsWith('analyzed')) repoFormStore.fetchedRepo = true;
+                if (event.data === 'done') {
+                    eventSource.close();
+                    this.fetchResult(task_id);
+                }
+            };
+        },
+        async fetchResult(task_id: string) {
+            try {
+                const response = await fetch(`/api/generate/${task_id}/`);
+                const data = await response.json();
+                repoFormStore.markdownContent = data.markdown; // Display the markdown, or process as needed
+            } catch (error) {
+                console.error('There was an error fetching the result:', error);
+            } finally {
+                repoFormStore.resetProgress();
             }
         },
         validateRepositoryUrl() {
