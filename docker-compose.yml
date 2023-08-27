@@ -10,6 +10,8 @@ services:
       - FLASK_APP=app.py
       - FLASK_RUN_HOST=0.0.0.0
       - FLASK_ENV=production
+      - GITHUB_TOKEN=$GITHUB_TOKEN
+      - OPENAI_API_KEY=$OPENAI_API_KEY
   ui:
     build:
       context: ./ui

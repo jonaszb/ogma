@@ -81,9 +81,13 @@ export default {
                 repoFormStore.setStatus(event.data);
                 if (event.data.toLocaleLowerCase().startsWith('validated')) repoFormStore.validatedRepo = true;
                 if (event.data.toLocaleLowerCase().startsWith('analyzed')) repoFormStore.fetchedRepo = true;
-                if (event.data === 'done') {
+                if (event.data.startsWith('done')) {
                     eventSource.close();
                     this.fetchResult(task_id);
+                }
+                if (event.data.startsWith('error')) {
+                    eventSource.close();
+                    repoFormStore.resetProgress();
                 }
             };
         },
