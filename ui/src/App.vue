@@ -46,7 +46,7 @@ section {
 }
 
 *[data-theme='dark'] section {
-    background: url(bg-ogma.webp) #062437;
+    background: url(/bg-ogma.webp) #062437;
     background-size: cover;
     background-blend-mode: multiply;
 }
