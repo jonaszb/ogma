@@ -23,7 +23,7 @@ COPY api/ .
 
 # Copy built frontend from the build stage to nginx directory
 COPY --from=ui-build-stage /app/ui/dist /usr/share/nginx/html
-COPY ui/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ui/nginx_mono.conf /etc/nginx/conf.d/default.conf
 
 # Setting up supervisord to manage processes
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
