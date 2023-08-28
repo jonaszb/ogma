@@ -115,6 +115,7 @@ body {
 }
 
 .btn-primary {
+    color: white;
     background-color: var(--sky-600);
     font-family: 'Raleway', sans-serif;
     cursor: pointer;
@@ -144,5 +145,6 @@ body {
     .input-primary {
         font-size: 1.25rem;
         height: 3rem;
+        padding: 0 1rem;
     }
 }
