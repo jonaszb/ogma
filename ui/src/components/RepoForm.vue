@@ -206,6 +206,7 @@ export default {
 
             & textarea {
                 height: 6rem;
+                padding: 1rem;
                 font-size: 1.25rem;
             }
         }
