@@ -40,13 +40,13 @@ section {
     padding-bottom: 2rem;
     width: 100vw;
     min-height: calc(100vh - 10rem);
-    background: url(./assets/bg-ogma.webp) rgba(125, 211, 252, 1);
+    background: url(/bg-ogma.webp) rgba(125, 211, 252, 1);
     background-size: cover;
     background-blend-mode: screen;
 }
 
 *[data-theme='dark'] section {
-    background: url(./assets/bg-ogma.webp) #062437;
+    background: url(bg-ogma.webp) #062437;
     background-size: cover;
     background-blend-mode: multiply;
 }
