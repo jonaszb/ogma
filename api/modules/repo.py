@@ -90,7 +90,7 @@ class GithubRepository:
     def generate_readme(self, info: str):
         # Create the prompt for GPT-3.5
         system_prompt = """
-        You write readme files for GitHub repositories. 
+        You write readme files for GitHub repositories based on the contents of the repository and additional information provided. You must never include the file/folder structure in the readme itself.
         """
         
         prompt = f"""
@@ -114,7 +114,7 @@ class GithubRepository:
             messages=[{"role": "system", "content": system_prompt},
                       {"role": "user", "content": prompt}],
             max_tokens=1500,
-            temperature=0.3,
+            temperature=0.2,
         )
         print(response)
         if len(response['choices']) > 0:
