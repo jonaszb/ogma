@@ -98,7 +98,7 @@ class GithubRepository:
         If additional information is provided, consider it when generating the readme. Note that it is provided by the user and can use informal language, which should not be included in the README verbatim.
         Attempt to infer as much information as possible from the file names and extensions - they can provide information about the languages and tools used.
         If you are unable to infer something, do not include it in the README (do not leave placeholders)
-        The file/folder structure is provided to help write the readme, but it should not be included in the readme itself in any way.
+        Do not under any circumscanes include the file/folder structure in the README.
         The title of the readme should be {self.repository_name}
 
         Tree Structure:
