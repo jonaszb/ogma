@@ -166,13 +166,8 @@ export default {
             margin-bottom: 0.5rem;
         }
 
-        & input {
-            height: 5rem;
-        }
-
         & textarea {
             height: 12rem;
-            padding: 1rem 2rem;
             resize: none;
             font-size: 1.5rem;
         }
