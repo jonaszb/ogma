@@ -4,6 +4,7 @@ import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 import ClipboardIcon from './icons/ClipboardIcon.vue';
 import CrossIcon from './icons/CrossIcon.vue';
+import DownloadIcon from './icons/DownloadIcon.vue';
 import { repoFormStore } from '../store/repoFormStore';
 
 const marked = new Marked(
@@ -38,6 +39,16 @@ export default {
                 this.showClipboardPopover = false;
             }, 2000);
         },
+        downloadMarkdown() {
+            const blob = new Blob([this.markdown], { type: 'text/plain' });
+            const link = document.createElement('a');
+
+            link.href = URL.createObjectURL(blob);
+            link.download = 'README.md';
+            link.click();
+
+            URL.revokeObjectURL(link.href);
+        },
     },
     computed: {
         compiledMarkdown() {
@@ -47,6 +58,7 @@ export default {
     components: {
         ClipboardIcon,
         CrossIcon,
+        DownloadIcon,
     },
 };
 </script>
@@ -57,6 +69,7 @@ export default {
             <div ref="markdownContent" v-html="compiledMarkdown"></div>
         </div>
         <div class="buttons-wrapper">
+            <button @click="downloadMarkdown"><DownloadIcon /></button>
             <button @click="copyMarkdownToClipboard">
                 <ClipboardIcon />
             </button>
