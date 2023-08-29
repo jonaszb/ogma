@@ -47,7 +47,8 @@
 
 body {
     margin: 0;
-    overscroll-behavior: none;
+    overscroll-behavior-y: contain;
+    overscroll-behavior-x: none;
 }
 
 #app {

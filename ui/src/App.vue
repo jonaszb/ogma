@@ -11,6 +11,34 @@ export default {
             repoFormStore,
         };
     },
+    mounted() {
+        // Prevents overscrolling, but allows using scroll to refresh
+        let touchStartY = 0;
+
+        document.addEventListener(
+            'touchstart',
+            (e) => {
+                touchStartY = e.touches[0].clientY;
+            },
+            { passive: true }
+        );
+
+        document.addEventListener(
+            'touchmove',
+            (e) => {
+                const touchY = e.touches[0].clientY;
+                const deltaY = touchY - touchStartY;
+
+                const isAtTop = window.scrollY === 0 && deltaY > 0;
+                const isAtBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight && deltaY < 0;
+
+                if (isAtTop || isAtBottom) {
+                    e.preventDefault();
+                }
+            },
+            { passive: false }
+        );
+    },
     components: {
         OgmaHeader,
         RepoForm,
