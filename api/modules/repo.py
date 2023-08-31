@@ -108,17 +108,12 @@ class GithubRepository:
         # Add additional information if provided
         if info:
             prompt += "\n\nAdditional Information:\n{}".format(info)
-            
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+        
+        return openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-16k",
             messages=[{"role": "system", "content": system_prompt},
                       {"role": "user", "content": prompt}],
-            max_tokens=1500,
-            temperature=0.2,
+            max_tokens=2000,
+            temperature=0.5,
+            stream=True
         )
-        print(response)
-        if len(response['choices']) > 0:
-            return response['choices'][0]['message']['content']
-        else:
-            return None
-

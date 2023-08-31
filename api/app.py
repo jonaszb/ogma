@@ -77,7 +77,20 @@ async def events(task_id: str):
             yield f"data: {current_status  + (' ' * 2048)}\n\n" 
             time.sleep(.5)
             current_status = status_db[task_id]['status']
-        yield f"data: {status_db[task_id]['status'] + ': ' + status_db[task_id]['result']}\n\n"
+        if current_status == 'error':
+            yield f"data: {status_db[task_id]['status'] + ': ' + status_db[task_id]['result']}\n\n"
+        else: 
+            next_value = next(status_db[task_id]['result'])
+            choice = next_value['choices'][0]
+            while not choice['finish_reason']:
+                lines = choice['delta']['content'].split('\n')
+                for i, line in enumerate(lines):
+                    if i > 0:
+                        line = "<br>" + line
+                    yield f"data: {'md:' + (' ' * 1024) + line}\n\n"
+                next_value = next(status_db[task_id]['result'])
+                choice = next_value['choices'][0]
+            yield f"data: {status_db[task_id]['status']}\n\n"
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
 @app.get("/generate/{task_id}/")

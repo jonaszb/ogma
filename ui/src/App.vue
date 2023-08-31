@@ -26,7 +26,11 @@ export default {
         <Transition mode="out-in" appear>
             <MarkdownEditor v-if="!!repoFormStore.markdownContent" />
             <ProgressIndicator v-else-if="repoFormStore.isProcessing" />
-            <RepoForm v-else-if="!repoFormStore.isProcessing" :repo-url="repoFormStore.repoUrl" />
+            <RepoForm
+                v-else-if="!repoFormStore.isProcessing"
+                :repo-url="repoFormStore.repoUrl"
+                :info="repoFormStore.additionalInfo"
+            />
         </Transition>
     </section>
 </template>

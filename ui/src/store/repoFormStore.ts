@@ -3,6 +3,7 @@ import { reactive } from 'vue';
 export const repoFormStore = reactive({
     markdownContent: '',
     repoUrl: '',
+    additionalInfo: '',
     isProcessing: false,
     validatedRepo: false,
     fetchedRepo: false,
@@ -19,7 +20,13 @@ export const repoFormStore = reactive({
     setRepoUrl(repoUrl: string) {
         this.repoUrl = repoUrl;
     },
+    setAdditionalInfo(info: string) {
+        this.additionalInfo = info;
+    },
     setMarkdownContent(markdownContent: string) {
         this.markdownContent = markdownContent;
+    },
+    appendMarkdown(markdownFragment: string) {
+        this.markdownContent += markdownFragment;
     },
 });

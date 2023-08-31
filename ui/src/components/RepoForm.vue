@@ -39,12 +39,17 @@ export default {
             type: String,
             default: '',
         },
+
+        info: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {
             repositoryUrl: this.repoUrl,
             repositoryUrlIsValid: true,
-            additionalInfo: '',
+            additionalInfo: this.info,
             additionalInfoIsValid: true,
         };
     },
@@ -54,6 +59,7 @@ export default {
             this.validateAdditionalInfo();
             if (this.repositoryUrlIsValid && this.additionalInfoIsValid) {
                 repoFormStore.setRepoUrl(this.repositoryUrl);
+                repoFormStore.setAdditionalInfo(this.additionalInfo);
                 repoFormStore.isProcessing = true;
                 try {
                     const response = await fetch('/api/generate/', {
@@ -79,28 +85,23 @@ export default {
             eventSource.onmessage = (event) => {
                 if (typeof event.data !== 'string') return;
                 repoFormStore.setStatus(event.data);
-                if (event.data.toLocaleLowerCase().startsWith('validated')) repoFormStore.validatedRepo = true;
-                if (event.data.toLocaleLowerCase().startsWith('analyzed')) repoFormStore.fetchedRepo = true;
-                if (event.data.startsWith('done')) {
+                if (event.data.startsWith('md:')) {
+                    let message = event.data.slice(1027); // include padding of 1024 spaces
+                    if (message.startsWith('<br>')) {
+                        message = message.slice(4);
+                        repoFormStore.appendMarkdown('\n');
+                    }
+                    repoFormStore.appendMarkdown(message);
+                } else if (event.data.toLocaleLowerCase().startsWith('validated')) repoFormStore.validatedRepo = true;
+                else if (event.data.toLocaleLowerCase().startsWith('analyzed')) repoFormStore.fetchedRepo = true;
+                else if (event.data.startsWith('done')) {
                     eventSource.close();
-                    this.fetchResult(task_id);
-                }
-                if (event.data.startsWith('error')) {
+                } else if (event.data.startsWith('error')) {
                     eventSource.close();
                     repoFormStore.resetProgress();
+                    // TODO: Display error message
                 }
             };
-        },
-        async fetchResult(task_id: string) {
-            try {
-                const response = await fetch(`/api/generate/${task_id}/`);
-                const data = await response.json();
-                repoFormStore.markdownContent = data.markdown; // Display the markdown, or process as needed
-            } catch (error) {
-                console.error('There was an error fetching the result:', error);
-            } finally {
-                repoFormStore.resetProgress();
-            }
         },
         validateRepositoryUrl() {
             const githubRepoRegex = /^(?:https?:\/\/)?github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\/)?/;

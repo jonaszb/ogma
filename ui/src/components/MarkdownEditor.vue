@@ -20,7 +20,6 @@ const marked = new Marked(
 export default {
     data() {
         return {
-            markdown: repoFormStore.markdownContent,
             showClipboardPopover: false,
             clipboardTimer: 0,
         };
@@ -28,19 +27,19 @@ export default {
 
     methods: {
         clearMarkdown() {
-            this.markdown = '';
+            repoFormStore.resetProgress();
             repoFormStore.setMarkdownContent('');
         },
         copyMarkdownToClipboard() {
             clearTimeout(this.clipboardTimer);
-            navigator.clipboard.writeText(this.markdown);
+            navigator.clipboard.writeText(repoFormStore.markdownContent);
             this.showClipboardPopover = true;
             this.clipboardTimer = setTimeout(() => {
                 this.showClipboardPopover = false;
             }, 2000);
         },
         downloadMarkdown() {
-            const blob = new Blob([this.markdown], { type: 'text/plain' });
+            const blob = new Blob([repoFormStore.markdownContent], { type: 'text/plain' });
             const link = document.createElement('a');
 
             link.href = URL.createObjectURL(blob);
@@ -52,7 +51,7 @@ export default {
     },
     computed: {
         compiledMarkdown() {
-            return marked.parse(this.markdown);
+            return marked.parse(repoFormStore.markdownContent);
         },
     },
     components: {
