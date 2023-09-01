@@ -125,14 +125,15 @@ export default {
         cursor: pointer;
         stroke: var(--sky-950);
         transition: all 0.1s ease-in-out;
-    }
 
-    & button:hover {
-        background-color: var(--sky-100);
-        filter: brightness(0.9);
-    }
-    & button:active {
-        transform: scale(0.95);
+        &:hover {
+            background-color: var(--sky-100);
+            filter: brightness(0.9);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
     }
 
     & .popover {
@@ -147,10 +148,10 @@ export default {
         box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.1);
         color: var(--sky-950);
         display: none;
-    }
 
-    & .popover.active {
-        display: block;
+        &.active {
+            display: block;
+        }
     }
 }
 
@@ -173,11 +174,11 @@ export default {
     & button {
         background-color: var(--sky-950);
         stroke: var(--sky-50);
-    }
 
-    & button:hover {
-        background-color: var(--sky-900);
-        filter: brightness(1.1);
+        &:hover {
+            background-color: var(--sky-900);
+            filter: brightness(1.1);
+        }
     }
 
     & .popover {

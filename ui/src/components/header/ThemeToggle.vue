@@ -47,13 +47,11 @@ export default {
                     }
                 }
             }
-            // document.addEventListener('DOMContentLoaded', function () {
             loadStyleSheet('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css', 'light');
             loadStyleSheet(
                 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css',
                 'dark'
             );
-            // });
         },
     },
 
