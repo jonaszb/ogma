@@ -1,5 +1,5 @@
 <template>
-    <button id="theme-toggle" @click="toggleTheme()">
+    <button id="theme-toggle" aria-label="Theme toggle" @click="toggleTheme()">
         <SunIcon v-if="userTheme === 'light'" />
         <MoonIcon v-else />
     </button>
@@ -22,8 +22,39 @@ export default {
 
     data() {
         return {
-            userTheme: 'light',
+            userTheme: '',
         };
+    },
+
+    watch: {
+        userTheme(newTheme) {
+            function loadStyleSheet(src: string, theme: 'light' | 'dark'): void {
+                if (newTheme === theme) {
+                    // Try to get the existing link element
+                    const linkElement = document.getElementById('theme-stylesheet') as HTMLLinkElement | null;
+
+                    if (linkElement) {
+                        // If the link element exists, update its href
+                        linkElement.href = src;
+                    } else {
+                        // If the link element doesn't exist, create it
+                        const link = document.createElement('link');
+                        link.id = 'theme-stylesheet'; // Assign an ID for future reference
+                        link.href = src;
+                        link.rel = 'stylesheet';
+                        link.type = 'text/css';
+                        document.head.appendChild(link);
+                    }
+                }
+            }
+            // document.addEventListener('DOMContentLoaded', function () {
+            loadStyleSheet('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css', 'light');
+            loadStyleSheet(
+                'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css',
+                'dark'
+            );
+            // });
+        },
     },
 
     methods: {

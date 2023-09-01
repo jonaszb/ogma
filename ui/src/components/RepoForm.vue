@@ -161,7 +161,7 @@ export default {
         }
 
         & label:not([hidden]) {
-            display: block;
+            display: inline-block;
             font-size: 1.5rem;
             font-weight: 400;
             margin-bottom: 0.5rem;

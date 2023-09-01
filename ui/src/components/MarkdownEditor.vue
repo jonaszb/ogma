@@ -64,7 +64,7 @@ export default {
 
 <template>
     <div class="markdown-editor">
-        <div class="markdown-editor__output">
+        <div class="output">
             <div ref="markdownContent" v-html="compiledMarkdown"></div>
         </div>
         <div class="buttons-wrapper">
@@ -78,7 +78,7 @@ export default {
     </div>
 </template>
 
-<style lang="scss">
+<style>
 .markdown-editor {
     position: relative;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif,
@@ -90,19 +90,19 @@ export default {
     width: min(calc(100% - 2rem), 56rem);
     box-shadow: inset 0 1px 4px 1px rgba(16, 22, 26, 0.1);
 
-    &__output {
+    & .output {
         padding: 0 2rem;
         width: calc(100% - 4rem);
         overflow: scroll;
         max-height: calc(100vh - 12rem);
     }
 
-    code:not(.hljs) {
+    & code:not(.hljs) {
         padding: 2px 4px;
         border-radius: 0.25rem;
     }
 
-    .buttons-wrapper {
+    & .buttons-wrapper {
         position: absolute;
         display: flex;
         gap: 0.5rem;
@@ -112,13 +112,7 @@ export default {
         opacity: 0;
     }
 
-    &:hover {
-        .buttons-wrapper {
-            opacity: 1;
-        }
-    }
-
-    button {
+    & button {
         padding: 0;
         display: flex;
         align-items: center;
@@ -131,17 +125,17 @@ export default {
         cursor: pointer;
         stroke: var(--sky-950);
         transition: all 0.1s ease-in-out;
-
-        &:hover {
-            background-color: var(--sky-100);
-            filter: brightness(0.9);
-        }
-        &:active {
-            transform: scale(0.95);
-        }
     }
 
-    .popover {
+    & button:hover {
+        background-color: var(--sky-100);
+        filter: brightness(0.9);
+    }
+    & button:active {
+        transform: scale(0.95);
+    }
+
+    & .popover {
         position: absolute;
         right: 0.5rem;
         top: -2rem;
@@ -153,10 +147,16 @@ export default {
         box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.1);
         color: var(--sky-950);
         display: none;
+    }
 
-        &.active {
-            display: block;
-        }
+    & .popover.active {
+        display: block;
+    }
+}
+
+.markdown-editor:hover {
+    .buttons-wrapper {
+        opacity: 1;
     }
 }
 
@@ -166,21 +166,21 @@ export default {
     background-color: rgba(0, 0, 0, 0.75);
     box-shadow: inset 0 -2px 3px 1px rgba(255, 255, 255, 0.15);
 
-    code:not(.hljs) {
+    & code:not(.hljs) {
         background-color: hsl(216, 28%, 10%);
     }
 
-    button {
+    & button {
         background-color: var(--sky-950);
         stroke: var(--sky-50);
-
-        &:hover {
-            background-color: var(--sky-900);
-            filter: brightness(1.1);
-        }
     }
 
-    .popover {
+    & button:hover {
+        background-color: var(--sky-900);
+        filter: brightness(1.1);
+    }
+
+    & .popover {
         background-color: var(--sky-950);
         border: 1px solid var(--sky-900);
         color: var(--sky-100);
@@ -188,11 +188,11 @@ export default {
 }
 
 *[data-theme='light'] .markdown-editor {
-    code.hljs {
+    & code.hljs {
         background-color: rgba(#f1f5f9, 0.7);
     }
 
-    code:not(.hljs) {
+    & code:not(.hljs) {
         background-color: #f1f5f9;
     }
 }
