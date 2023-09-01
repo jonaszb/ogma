@@ -42,7 +42,7 @@ li {
     margin: 0;
     padding: 0.5rem 2rem 0.5rem 1rem;
     width: 21rem;
-    min-height: 9rem;
+    min-height: 4rem;
     border-left: 6px solid transparent;
     font-family: 'Roboto', sans-serif;
     font-size: 1.2rem;
@@ -71,6 +71,13 @@ li.danger {
     background-color: #030712;
     & i {
         background: radial-gradient(circle, rgba(255, 255, 255, 1) 50%, transparent 50%);
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    li {
+        width: calc(100vw - 3rem);
+        font-size: 1rem;
     }
 }
 </style>

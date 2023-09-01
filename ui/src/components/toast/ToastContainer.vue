@@ -35,6 +35,7 @@ export default {
     position: fixed;
     left: 2rem;
     bottom: 2rem;
+    pointer-events: none;
 
     & ul {
         gap: 1rem;
@@ -66,5 +67,23 @@ export default {
    animations can be calculated correctly. */
 .toasts-leave-active {
     position: absolute;
+}
+
+@media only screen and (max-width: 640px) {
+    .toast-container {
+        left: 0;
+        bottom: auto;
+        top: 0;
+
+        & ul {
+            width: 100vw;
+            gap: 0;
+            height: 5rem;
+        }
+    }
+
+    .toasts-enter-from {
+        transform: translateY(-6rem);
+    }
 }
 </style>
