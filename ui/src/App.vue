@@ -3,6 +3,7 @@ import OgmaHeader from './components/header/OgmaHeader.vue';
 import RepoForm from './components/RepoForm.vue';
 import MarkdownEditor from './components/MarkdownEditor.vue';
 import ProgressIndicator from './components/ProgressIndicator.vue';
+import ToastContainer from './components/toast/ToastContainer.vue';
 import { repoFormStore } from './store/repoFormStore';
 
 export default {
@@ -16,6 +17,7 @@ export default {
         RepoForm,
         MarkdownEditor,
         ProgressIndicator,
+        ToastContainer,
     },
 };
 </script>
@@ -23,6 +25,7 @@ export default {
 <template>
     <OgmaHeader />
     <section>
+        <ToastContainer />
         <Transition mode="out-in" appear>
             <MarkdownEditor v-if="!!repoFormStore.markdownContent" />
             <ProgressIndicator v-else-if="repoFormStore.isProcessing" />
