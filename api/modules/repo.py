@@ -2,6 +2,7 @@ import requests
 from modules.tree import TreeNode
 import openai
 
+
 class GithubRepository:
 
     def __init__(self, url: str):
@@ -32,13 +33,13 @@ class GithubRepository:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         data = response.json()
-        
+
         def is_file(node_data):
             return isinstance(node_data, dict) and "type" in node_data and node_data["type"] == "file"
-        
+
         def is_dir(node_data):
             return isinstance(node_data, dict) and "type" in node_data and node_data["type"] == "dir"
-        
+
         def create_node(node_data):
             if is_file(node_data):
                 node = TreeNode("file")
@@ -57,7 +58,7 @@ class GithubRepository:
 
     def set_token(self, token: str):
         self.token = token
-        
+
     def validate_repository(self):
         url = f"https://api.github.com/repos/{self.username}/{self.repository_name}"
         response = requests.get(url)
@@ -92,7 +93,7 @@ class GithubRepository:
         system_prompt = """
         You write readme files for GitHub repositories based on the contents of the repository and additional information provided. You must never include the file/folder structure in the readme itself.
         """
-        
+
         prompt = f"""
         Given this repository data, write a professional README for this repository. The 'contents' are a tree structure of the files and folders in the repository. The 'repository_data' contains information about the repository itself.
         If additional information is provided, consider it when generating the readme. Note that it is provided by the user and can use informal language, which should not be included in the README verbatim.
@@ -104,11 +105,11 @@ class GithubRepository:
         Tree Structure:
         {str(self.contents.dict())}
         """
-        
+
         # Add additional information if provided
         if info:
             prompt += "\n\nAdditional Information:\n{}".format(info)
-        
+
         return openai.ChatCompletion.create(
             model="gpt-3.5-turbo-16k",
             messages=[{"role": "system", "content": system_prompt},
