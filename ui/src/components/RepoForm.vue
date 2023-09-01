@@ -32,6 +32,7 @@
 
 <script lang="ts">
 import { repoFormStore } from '../store/repoFormStore';
+import { toastStore } from '../store/toastStore';
 
 export default {
     props: {
@@ -60,7 +61,6 @@ export default {
             if (this.repositoryUrlIsValid && this.additionalInfoIsValid) {
                 repoFormStore.setRepoUrl(this.repositoryUrl);
                 repoFormStore.setAdditionalInfo(this.additionalInfo);
-                repoFormStore.isProcessing = true;
                 try {
                     const response = await fetch('/api/generate/', {
                         method: 'POST',
@@ -72,10 +72,16 @@ export default {
                             info: this.additionalInfo,
                         }),
                     });
+                    if (!response.ok) {
+                        const data = await response.json();
+                        toastStore.addToast(data.error ?? 'Something went wrong', 'danger');
+                        return;
+                    }
+                    repoFormStore.isProcessing = true;
                     const data = await response.json();
                     this.listenForUpdates(data.task_id);
                 } catch (error) {
-                    console.error('There was an error:', error);
+                    toastStore.addToast('Something went wrong', 'danger');
                     repoFormStore.isProcessing = false;
                 }
             }
