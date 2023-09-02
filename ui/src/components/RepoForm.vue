@@ -25,7 +25,7 @@
                     Character limit exceeded ({{ additionalInfo.length }} / 2000)
                 </p>
             </div>
-            <button class="btn-primary">Generate readme</button>
+            <button class="btn-primary" :disabled="validating" :class="validating && 'pulse'">Generate readme</button>
         </form>
     </div>
 </template>
@@ -33,8 +33,12 @@
 <script lang="ts">
 import { repoFormStore } from '../store/repoFormStore';
 import { toastStore } from '../store/toastStore';
+import Spinner from './spinner/Spinner.vue';
 
 export default {
+    components: {
+        Spinner,
+    },
     props: {
         repoUrl: {
             type: String,
@@ -52,6 +56,7 @@ export default {
             repositoryUrlIsValid: true,
             additionalInfo: this.info,
             additionalInfoIsValid: true,
+            validating: false,
         };
     },
     methods: {
@@ -59,6 +64,7 @@ export default {
             this.validateRepositoryUrl();
             this.validateAdditionalInfo();
             if (this.repositoryUrlIsValid && this.additionalInfoIsValid) {
+                this.validating = true;
                 repoFormStore.setRepoUrl(this.repositoryUrl);
                 repoFormStore.setAdditionalInfo(this.additionalInfo);
                 try {
@@ -83,6 +89,8 @@ export default {
                 } catch (error) {
                     toastStore.addToast('Something went wrong', 'danger');
                     repoFormStore.isProcessing = false;
+                } finally {
+                    this.validating = false;
                 }
             }
         },

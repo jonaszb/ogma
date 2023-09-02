@@ -1,16 +1,21 @@
 <template>
-    <div class="progress-wrapper">
+    <div>
         <Transition mode="out-in" appear>
-            <p v-if="!repoFormStore.validatedRepo">Validating repository...</p>
-            <p v-else-if="!repoFormStore.fetchedRepo">Analyzing repository...</p>
-            <p v-else>Generating markdown...</p>
+            <div class="progress-wrapper">
+                <Spinner class="lg" />
+                <p>Analyzing repository</p>
+            </div>
         </Transition>
     </div>
 </template>
 
 <script lang="ts">
 import { repoFormStore } from '../store/repoFormStore';
+import Spinner from './spinner/Spinner.vue';
 export default {
+    components: {
+        Spinner,
+    },
     data() {
         return {
             repoFormStore,
@@ -25,14 +30,17 @@ export default {
     height: min(calc(100vh - 10rem), 25rem);
     flex-direction: column;
     justify-content: center;
-    gap: 3rem;
+    align-items: center;
+    gap: 1rem;
     color: var(--sky-700);
 }
 
 p {
+    margin-top: 0;
     font-size: 4rem;
     font-weight: 300;
     text-align: center;
+    line-height: normal;
 }
 
 .v-enter-active,
@@ -52,7 +60,6 @@ p {
 @media only screen and (max-width: 764px) {
     p {
         font-size: 3rem;
-        margin-top: 0;
     }
 }
 </style>
