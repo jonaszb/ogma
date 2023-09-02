@@ -81,7 +81,7 @@ export default {
         & ul {
             width: 100vw;
             gap: 0;
-            height: 5rem;
+            height: calc(5rem + 6px);
         }
     }
     .toasts-enter-from {

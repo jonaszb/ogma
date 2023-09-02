@@ -52,6 +52,11 @@ li {
     align-items: center;
     box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.2);
 
+    @media (width <= 640px) {
+        border-left: none;
+        border-bottom: 6px solid;
+    }
+
     & i {
         line-height: 0;
         margin-right: 1rem;
