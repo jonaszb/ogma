@@ -1,5 +1,5 @@
 <template>
-    <div class="toast-container">
+    <div class="toast-container" :class="toasts.length === 0 ? 'no-click' : ''">
         <TransitionGroup name="toasts" tag="ul">
             <Toast
                 v-for="toast in toasts"
@@ -35,7 +35,6 @@ export default {
     position: fixed;
     left: 2rem;
     bottom: 2rem;
-    pointer-events: none;
 
     & ul {
         gap: 1rem;
@@ -46,6 +45,10 @@ export default {
         height: 10rem;
         width: 24rem;
     }
+}
+
+.no-click {
+    pointer-events: none;
 }
 
 .toasts-move, /* apply transition to moving elements */
@@ -81,7 +84,6 @@ export default {
             height: 5rem;
         }
     }
-
     .toasts-enter-from {
         transform: translateY(-6rem);
     }
