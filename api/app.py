@@ -116,4 +116,6 @@ async def events(task_id: str):
 
 @app.get("/generate/{task_id}/")
 async def get_result(task_id: str):
-    return {"markdown": status_db[task_id]['result']}
+    result = {"markdown": status_db[task_id]['result']}
+    del status_db[task_id]
+    return result
