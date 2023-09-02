@@ -66,7 +66,7 @@ async def generate(data: RepoData, background_tasks: BackgroundTasks, response: 
     if data.info:
         try:
             res = openai.Moderation.create(input=data.info)
-            if (res['results']['flagged']):
+            if (res['results'][0]['flagged']):
                 response.status_code = 400
                 return {"error": "Input violates content policy"}
         except:
