@@ -25,11 +25,6 @@
     --sky-900: #0c4a6e;
     --sky-950: #082f49;
 
-    --bp-lg: 1024px;
-    --bp-md: 768px;
-    --bp-sm: 640px;
-    --bp-xs: 480px;
-
     @media screen {
         &[data-theme='dark'] {
             background-color: var(--sky-950);
@@ -51,9 +46,9 @@ body {
     border-radius: 0.5rem;
     border: 2px solid #cbd5e1;
     width: calc(100% - 4rem);
-    padding: 1rem 2rem;
+    padding: 1.25rem 2rem;
     text-align: left;
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 2rem;
     font-weight: 400;
     color: var(--sky-600);
@@ -92,7 +87,7 @@ body {
 *[data-theme='dark'] {
     .input-primary {
         background-color: #020617;
-        border: 2px solid color-mix(in srgb, var(--sky-950), transparent 10%);
+        border: 2px solid hsla(204, 80%, 16%, 0.101);
         color: var(--sky-100);
         &::placeholder {
             color: #94a3b8;
@@ -136,7 +131,6 @@ body {
 @media only screen and (max-width: 640px) {
     .input-primary {
         font-size: 1.25rem;
-        height: 3rem;
         padding: 1rem;
         width: calc(100% - 2rem);
     }

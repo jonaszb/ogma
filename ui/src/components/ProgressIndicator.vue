@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Transition mode="out-in" appear>
+        <Transition appear>
             <div class="progress-wrapper">
                 <Spinner class="lg" />
                 <p>Analyzing repository</p>

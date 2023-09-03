@@ -119,7 +119,8 @@ export default {
         justify-content: center;
         background-color: var(--sky-50);
         border-radius: 100%;
-        border: none;
+        border: 2px solid rgba(255, 255, 255, 0.75);
+        box-sizing: content-box;
         width: 2rem;
         aspect-ratio: 1;
         cursor: pointer;
@@ -174,6 +175,7 @@ export default {
     & button {
         background-color: var(--sky-950);
         stroke: var(--sky-50);
+        border: 2px solid rgba(0, 0, 0, 0.75);
 
         &:hover {
             background-color: var(--sky-900);

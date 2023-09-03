@@ -33,12 +33,8 @@
 <script lang="ts">
 import { repoFormStore } from '../store/repoFormStore';
 import { toastStore } from '../store/toastStore';
-import Spinner from './spinner/Spinner.vue';
 
 export default {
-    components: {
-        Spinner,
-    },
     props: {
         repoUrl: {
             type: String,
@@ -74,7 +70,7 @@ export default {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            url: this.repositoryUrl,
+                            url: this.repositoryUrl.toLowerCase(),
                             info: this.additionalInfo,
                         }),
                     });
@@ -98,7 +94,6 @@ export default {
             const eventSource = new EventSource(`/api/events/${task_id}/`);
             eventSource.onmessage = (event) => {
                 if (typeof event.data !== 'string') return;
-                repoFormStore.setStatus(event.data);
                 if (event.data.startsWith('md:')) {
                     let message = event.data.slice(1027); // include padding of 1024 spaces
                     if (message.startsWith('<br>')) {
@@ -106,20 +101,18 @@ export default {
                         repoFormStore.appendMarkdown('\n');
                     }
                     repoFormStore.appendMarkdown(message);
-                } else if (event.data.toLocaleLowerCase().startsWith('validated')) repoFormStore.validatedRepo = true;
-                else if (event.data.toLocaleLowerCase().startsWith('analyzed')) repoFormStore.fetchedRepo = true;
-                else if (event.data.startsWith('done')) {
+                } else if (event.data.startsWith('done')) {
                     eventSource.close();
                 } else if (event.data.startsWith('error')) {
                     eventSource.close();
                     repoFormStore.resetProgress();
-                    // TODO: Display error message
+                    toastStore.addToast('Something went wrong', 'danger');
                 }
             };
         },
         validateRepositoryUrl() {
             const githubRepoRegex = /^(?:https?:\/\/)?github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\/)?/;
-            this.repositoryUrlIsValid = githubRepoRegex.test(this.repositoryUrl);
+            this.repositoryUrlIsValid = githubRepoRegex.test(this.repositoryUrl.toLowerCase());
         },
         validateAdditionalInfo() {
             if (this.additionalInfo.length > 2000) {
