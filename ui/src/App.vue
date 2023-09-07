@@ -5,11 +5,13 @@ import MarkdownEditor from './components/MarkdownEditor.vue';
 import ProgressIndicator from './components/ProgressIndicator.vue';
 import ToastContainer from './components/toast/ToastContainer.vue';
 import { repoFormStore } from './store/repoFormStore';
+import { taskStore } from './store/taskStore';
 
 export default {
     data() {
         return {
             repoFormStore,
+            taskStore,
         };
     },
     components: {
@@ -27,7 +29,7 @@ export default {
     <section>
         <ToastContainer />
         <Transition mode="out-in" appear>
-            <MarkdownEditor v-if="!!repoFormStore.markdownContent" />
+            <MarkdownEditor v-if="!!taskStore.markdownContent" />
             <ProgressIndicator v-else-if="repoFormStore.isProcessing" />
             <RepoForm
                 v-else-if="!repoFormStore.isProcessing"

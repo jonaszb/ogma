@@ -6,6 +6,7 @@ import ClipboardIcon from './icons/ClipboardIcon.vue';
 import CrossIcon from './icons/CrossIcon.vue';
 import DownloadIcon from './icons/DownloadIcon.vue';
 import { repoFormStore } from '../store/repoFormStore';
+import { taskStore } from '../store/taskStore';
 
 const marked = new Marked(
     markedHighlight({
@@ -28,18 +29,19 @@ export default {
     methods: {
         clearMarkdown() {
             repoFormStore.resetProgress();
-            repoFormStore.setMarkdownContent('');
+            taskStore.closeEventSource();
+            taskStore.setMarkdownContent('');
         },
         copyMarkdownToClipboard() {
             clearTimeout(this.clipboardTimer);
-            navigator.clipboard.writeText(repoFormStore.markdownContent);
+            navigator.clipboard.writeText(taskStore.markdownContent);
             this.showClipboardPopover = true;
             this.clipboardTimer = setTimeout(() => {
                 this.showClipboardPopover = false;
             }, 2000);
         },
         downloadMarkdown() {
-            const blob = new Blob([repoFormStore.markdownContent], { type: 'text/plain' });
+            const blob = new Blob([taskStore.markdownContent], { type: 'text/plain' });
             const link = document.createElement('a');
 
             link.href = URL.createObjectURL(blob);
@@ -51,7 +53,7 @@ export default {
     },
     computed: {
         compiledMarkdown() {
-            return marked.parse(repoFormStore.markdownContent);
+            return marked.parse(taskStore.markdownContent);
         },
     },
     components: {

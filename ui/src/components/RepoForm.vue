@@ -4,25 +4,27 @@
         <form @submit.prevent="handleSubmit">
             <label hidden for="repository-url">GitHub repository URL</label>
             <input
-                v-model="repositoryUrl"
+                v-model="repoFormStore.repoUrl"
                 class="input-primary"
-                :class="{ 'input-error': !repositoryUrlIsValid }"
+                :class="{ 'input-error': !repoFormStore.repositoryUrlIsValid }"
                 id="repository-url"
                 type="text"
                 placeholder="Repository URL..."
-                @blur="validateRepositoryUrl"
+                @change="revalidateUrl"
+                @blur="repoFormStore.validateRepositoryUrl"
             />
             <div>
                 <label for="additional-info">Additional information</label>
                 <textarea
-                    v-model="additionalInfo"
+                    v-model="repoFormStore.additionalInfo"
                     class="input-primary"
-                    :class="{ 'input-error': !additionalInfoIsValid }"
+                    :class="{ 'input-error': !repoFormStore.additionalInfoIsValid }"
                     id="additional-info"
                     placeholder="e.g. required environment variables, how to run the project, etc."
+                    @change="repoFormStore.validateAdditionalInfo"
                 ></textarea>
-                <p v-if="!additionalInfoIsValid" class="error-message">
-                    Character limit exceeded ({{ additionalInfo.length }} / 2000)
+                <p v-if="!repoFormStore.additionalInfoIsValid" class="error-message">
+                    Character limit exceeded ({{ repoFormStore.additionalInfo.length }} / 2000)
                 </p>
             </div>
             <button class="btn-primary" :disabled="validating" :class="validating && 'pulse'">Generate readme</button>
@@ -33,6 +35,7 @@
 <script lang="ts">
 import { repoFormStore } from '../store/repoFormStore';
 import { toastStore } from '../store/toastStore';
+import { taskStore } from '../store/taskStore';
 
 export default {
     props: {
@@ -47,22 +50,20 @@ export default {
         },
     },
     data() {
+        const { repoUrl, additionalInfo } = repoFormStore;
         return {
-            repositoryUrl: this.repoUrl,
-            repositoryUrlIsValid: true,
-            additionalInfo: this.info,
-            additionalInfoIsValid: true,
+            repoUrl,
+            additionalInfo,
+            repoFormStore,
             validating: false,
         };
     },
     methods: {
         async handleSubmit() {
-            this.validateRepositoryUrl();
-            this.validateAdditionalInfo();
-            if (this.repositoryUrlIsValid && this.additionalInfoIsValid) {
+            repoFormStore.validateRepositoryUrl();
+            repoFormStore.validateAdditionalInfo();
+            if (repoFormStore.formIsValid()) {
                 this.validating = true;
-                repoFormStore.setRepoUrl(this.repositoryUrl);
-                repoFormStore.setAdditionalInfo(this.additionalInfo);
                 try {
                     const response = await fetch('/api/generate/', {
                         method: 'POST',
@@ -70,8 +71,8 @@ export default {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            url: this.repositoryUrl.toLowerCase(),
-                            info: this.additionalInfo,
+                            url: repoFormStore.repoUrl.toLowerCase(),
+                            info: repoFormStore.additionalInfo,
                         }),
                     });
                     if (!response.ok) {
@@ -81,7 +82,7 @@ export default {
                     }
                     repoFormStore.isProcessing = true;
                     const data = await response.json();
-                    this.listenForUpdates(data.task_id);
+                    taskStore.listenForUpdates(data.task_id);
                 } catch (error) {
                     toastStore.addToast('Something went wrong', 'danger');
                     repoFormStore.isProcessing = false;
@@ -90,46 +91,15 @@ export default {
                 }
             }
         },
-        listenForUpdates(task_id: string) {
-            const eventSource = new EventSource(`/api/events/${task_id}/`);
-            eventSource.onmessage = (event) => {
-                if (typeof event.data !== 'string') return;
-                if (event.data.startsWith('md:')) {
-                    let message = event.data.slice(1027); // include padding of 1024 spaces
-                    if (message.startsWith('<br>')) {
-                        message = message.slice(4);
-                        repoFormStore.appendMarkdown('\n');
-                    }
-                    repoFormStore.appendMarkdown(message);
-                } else if (event.data.startsWith('done')) {
-                    eventSource.close();
-                } else if (event.data.startsWith('error')) {
-                    eventSource.close();
-                    repoFormStore.resetProgress();
-                    toastStore.addToast('Something went wrong', 'danger');
-                }
-            };
-        },
-        validateRepositoryUrl() {
-            const githubRepoRegex = /^(?:https?:\/\/)?github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\/)?/;
-            this.repositoryUrlIsValid = githubRepoRegex.test(this.repositoryUrl.toLowerCase());
-        },
-        validateAdditionalInfo() {
-            if (this.additionalInfo.length > 2000) {
-                this.additionalInfoIsValid = false;
-            } else {
-                this.additionalInfoIsValid = true;
+        revalidateUrl() {
+            if (!repoFormStore.repositoryUrlIsValid) {
+                repoFormStore.validateRepositoryUrl();
             }
         },
     },
     watch: {
         additionalInfo() {
-            this.validateAdditionalInfo();
-        },
-        repositoryUrl() {
-            if (!this.repositoryUrlIsValid) {
-                this.validateRepositoryUrl();
-            }
+            repoFormStore.validateAdditionalInfo();
         },
     },
 };
