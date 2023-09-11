@@ -2,12 +2,6 @@
     <div class="spinner"></div>
 </template>
 
-<script lang="ts">
-export default {
-    name: 'Spinner',
-};
-</script>
-
 <style scoped>
 .spinner {
     --spinner-color: var(--sky-600);

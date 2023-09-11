@@ -20,19 +20,17 @@
     </li>
 </template>
 
-<script lang="ts">
-export default {
-    props: {
-        message: {
-            type: String,
-            required: true,
-        },
-        toastType: {
-            type: String,
-            required: true,
-        },
+<script setup lang="ts">
+defineProps({
+    message: {
+        type: String,
+        required: true,
     },
-};
+    toastType: {
+        type: String,
+        required: true,
+    },
+});
 </script>
 
 <style scoped>

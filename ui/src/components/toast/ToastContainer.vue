@@ -12,22 +12,12 @@
     </div>
 </template>
 
-<script lang="ts">
-import { TransitionGroup } from 'vue';
+<script setup lang="ts">
+import { TransitionGroup, computed } from 'vue';
 import { toastStore } from '../../store/toastStore';
 import Toast from './Toast.vue';
 
-export default {
-    components: {
-        Toast,
-        TransitionGroup,
-    },
-    computed: {
-        toasts() {
-            return toastStore.toasts;
-        },
-    },
-};
+const toasts = computed(() => toastStore.toasts);
 </script>
 
 <style scoped>

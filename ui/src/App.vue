@@ -1,7 +1,7 @@
 <script lang="ts">
 import OgmaHeader from './components/header/OgmaHeader.vue';
 import RepoForm from './components/RepoForm.vue';
-import MarkdownEditor from './components/MarkdownEditor.vue';
+import MarkdownEditor from './components/markdown/MarkdownEditor.vue';
 import ProgressIndicator from './components/ProgressIndicator.vue';
 import ToastContainer from './components/toast/ToastContainer.vue';
 import { repoFormStore } from './store/repoFormStore';
@@ -55,7 +55,7 @@ section {
 }
 
 *[data-theme='dark'] section {
-    background: url(/bg-ogma.webp) #062437;
+    background: url(/bg-ogma.webp) hsl(203, 81%, 18%);
     background-size: cover;
     background-blend-mode: multiply;
 }

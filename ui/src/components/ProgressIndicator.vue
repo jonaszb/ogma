@@ -9,19 +9,8 @@
     </div>
 </template>
 
-<script lang="ts">
-import { repoFormStore } from '../store/repoFormStore';
+<script setup lang="ts">
 import Spinner from './spinner/Spinner.vue';
-export default {
-    components: {
-        Spinner,
-    },
-    data() {
-        return {
-            repoFormStore,
-        };
-    },
-};
 </script>
 
 <style scoped>
