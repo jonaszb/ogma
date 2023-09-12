@@ -32,77 +32,63 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { repoFormStore } from '../store/repoFormStore';
 import { toastStore } from '../store/toastStore';
 import { taskStore } from '../store/taskStore';
+import { ref, watch } from 'vue';
 
-export default {
-    props: {
-        repoUrl: {
-            type: String,
-            default: '',
-        },
+defineProps<{
+    repoUrl: string;
+    info: string;
+}>();
 
-        info: {
-            type: String,
-            default: '',
-        },
-    },
-    data() {
-        const { repoUrl, additionalInfo } = repoFormStore;
-        return {
-            repoUrl,
-            additionalInfo,
-            repoFormStore,
-            validating: false,
-        };
-    },
-    methods: {
-        async handleSubmit() {
-            repoFormStore.validateRepositoryUrl();
-            repoFormStore.validateAdditionalInfo();
-            if (repoFormStore.formIsValid()) {
-                this.validating = true;
-                try {
-                    const response = await fetch('/api/generate/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            url: repoFormStore.repoUrl.toLowerCase(),
-                            info: repoFormStore.additionalInfo,
-                        }),
-                    });
-                    if (!response.ok) {
-                        const data = await response.json();
-                        toastStore.addToast(data.error ?? 'Something went wrong', 'danger');
-                        return;
-                    }
-                    repoFormStore.isProcessing = true;
-                    const data = await response.json();
-                    taskStore.listenForUpdates(data.task_id);
-                } catch (error) {
-                    toastStore.addToast('Something went wrong', 'danger');
-                    repoFormStore.isProcessing = false;
-                } finally {
-                    this.validating = false;
-                }
+const validating = ref(false);
+
+const handleSubmit = async () => {
+    repoFormStore.validateRepositoryUrl();
+    repoFormStore.validateAdditionalInfo();
+    if (repoFormStore.formIsValid()) {
+        validating.value = true;
+        try {
+            const response = await fetch('/api/generate/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    url: repoFormStore.repoUrl.toLowerCase(),
+                    info: repoFormStore.additionalInfo,
+                }),
+            });
+            if (!response.ok) {
+                const data = await response.json();
+                toastStore.addToast(data.error ?? 'Something went wrong', 'danger');
+                return;
             }
-        },
-        revalidateUrl() {
-            if (!repoFormStore.repositoryUrlIsValid) {
-                repoFormStore.validateRepositoryUrl();
-            }
-        },
-    },
-    watch: {
-        additionalInfo() {
-            repoFormStore.validateAdditionalInfo();
-        },
-    },
+            repoFormStore.isProcessing = true;
+            const data = await response.json();
+            taskStore.listenForUpdates(data.task_id);
+        } catch (error) {
+            toastStore.addToast('Something went wrong', 'danger');
+            repoFormStore.isProcessing = false;
+        } finally {
+            validating.value = false;
+        }
+    }
 };
+const revalidateUrl = () => {
+    if (!repoFormStore.repositoryUrlIsValid) {
+        repoFormStore.validateRepositoryUrl();
+    }
+};
+
+watch(
+    () => repoFormStore.additionalInfo,
+    () => {
+        repoFormStore.validateAdditionalInfo();
+    }
+);
 </script>
 
 <style scoped>

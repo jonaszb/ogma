@@ -5,86 +5,68 @@
     </button>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import SunIcon from '../icons/SunIcon.vue';
 import MoonIcon from '../icons/MoonIcon.vue';
+import { onMounted, ref, watch } from 'vue';
 
-export default {
-    components: {
-        SunIcon,
-        MoonIcon,
-    },
-    mounted() {
-        const initUserTheme = this.getTheme() || this.getMediaPreference();
-        this.userTheme = initUserTheme;
-        document.documentElement.dataset.theme = initUserTheme;
-    },
+const userTheme = ref(localStorage.getItem('user-theme') || 'light');
 
-    data() {
-        return {
-            userTheme: '',
-        };
-    },
+onMounted(() => {
+    const initUserTheme = getTheme() || getMediaPreference();
+    userTheme.value = initUserTheme;
+    document.documentElement.dataset.theme = initUserTheme;
+});
 
-    watch: {
-        userTheme(newTheme) {
-            function loadStyleSheet(src: string, theme: 'light' | 'dark'): void {
-                if (newTheme === theme) {
-                    // Try to get the existing link element
-                    const linkElement = document.getElementById('theme-stylesheet') as HTMLLinkElement | null;
+function loadStyleSheet(src: string, theme: 'light' | 'dark') {
+    watch(userTheme, (newTheme) => {
+        if (newTheme === theme) {
+            const linkElement = document.getElementById('theme-stylesheet');
 
-                    if (linkElement) {
-                        // If the link element exists, update its href
-                        linkElement.href = src;
-                    } else {
-                        // If the link element doesn't exist, create it
-                        const link = document.createElement('link');
-                        link.id = 'theme-stylesheet'; // Assign an ID for future reference
-                        link.href = src;
-                        link.rel = 'stylesheet';
-                        link.type = 'text/css';
-                        document.head.appendChild(link);
-                    }
-                }
-            }
-            loadStyleSheet('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css', 'light');
-            loadStyleSheet(
-                'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css',
-                'dark'
-            );
-        },
-    },
-
-    methods: {
-        toggleTheme() {
-            const activeTheme = localStorage.getItem('user-theme');
-            if (activeTheme === 'light') {
-                this.setTheme('dark');
+            if (linkElement) {
+                linkElement.setAttribute('href', src);
             } else {
-                this.setTheme('light');
+                const link = document.createElement('link');
+                link.id = 'theme-stylesheet';
+                link.href = src;
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                document.head.appendChild(link);
             }
-        },
+        }
+    });
+}
 
-        getTheme() {
-            return localStorage.getItem('user-theme');
-        },
+loadStyleSheet('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css', 'light');
+loadStyleSheet('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css', 'dark');
 
-        setTheme(theme: string) {
-            localStorage.setItem('user-theme', theme);
-            this.userTheme = theme;
-            document.documentElement.dataset.theme = theme;
-        },
+function toggleTheme() {
+    const activeTheme = localStorage.getItem('user-theme');
+    if (activeTheme === 'light') {
+        setTheme('dark');
+    } else {
+        setTheme('light');
+    }
+}
 
-        getMediaPreference() {
-            const hasDarkPreference = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (hasDarkPreference) {
-                return 'dark';
-            } else {
-                return 'light';
-            }
-        },
-    },
-};
+function getTheme() {
+    return localStorage.getItem('user-theme');
+}
+
+function setTheme(theme: 'light' | 'dark') {
+    localStorage.setItem('user-theme', theme);
+    userTheme.value = theme;
+    document.documentElement.dataset.theme = theme;
+}
+
+function getMediaPreference() {
+    const hasDarkPreference = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (hasDarkPreference) {
+        return 'dark';
+    } else {
+        return 'light';
+    }
+}
 </script>
 <style scoped>
 button {
