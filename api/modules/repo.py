@@ -114,7 +114,7 @@ class GithubRepository:
             model="gpt-3.5-turbo-16k",
             messages=[{"role": "system", "content": system_prompt},
                       {"role": "user", "content": prompt}],
-            max_tokens=2000,
+            max_tokens=4000,
             temperature=0.5,
             stream=True
         )
