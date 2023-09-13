@@ -16,7 +16,7 @@ Ogma is built with the following technologies:
 
 -   FastAPI backend, which uses GPT to generate the README
 -   Vue.js, Vite, and TypeScript frontend for a responsive and interactive user interface
--   Nginx for hosting and proxying the application
+-   Nginx as web server and reverse proxy
 -   Docker for containerization and easy deployment
 
 ## Getting Started
