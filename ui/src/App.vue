@@ -48,7 +48,7 @@ section {
     padding-top: 8rem;
     padding-bottom: 2rem;
     width: 100vw;
-    min-height: calc(100vh - 10rem);
+    min-height: calc(100dvh - 10rem);
     background: url(/bg-ogma.webp) rgba(125, 211, 252, 1);
     background-size: cover;
     background-blend-mode: screen;
