@@ -25,6 +25,10 @@ class RepoData(BaseModel):
     info: str
 
 
+class RepoUrl(BaseModel):
+    url: str
+
+
 def set_error_status(task_id: str, error: str):
     status_db[task_id]['status'] = "error"
     status_db[task_id]['result'] = error
@@ -59,6 +63,30 @@ def process_data(task_id: str, repository: GithubRepository, info: str):
         return
     status_db[task_id]['result'] = markdown
     status_db[task_id]['status'] = "done"
+
+
+@app.post("/validate/")
+async def validate_repo(data: RepoUrl, response: Response):
+    try:
+        repo = GithubRepository(data.url)
+        repo.set_token(gh_token)
+    except Exception:
+        response.status_code = 400
+        return {"error": "Failed to identify repository"}
+    try:
+        repo.validate_repository()
+    except:
+        response.status_code = 400
+        return {"error": "Failed to validate repository"}
+    try:
+        repo.get_repository_info()
+    except:
+        response.status_code = 400
+        return {"error": "Failed to get repository info"}
+    if repo.repository_data['size'] > 2000:
+        response.status_code = 400
+        return {"error": "Repository is too big to process"}
+    return {"success": True}
 
 
 @app.post("/generate/")

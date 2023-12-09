@@ -5,10 +5,12 @@ export const repoFormStore = reactive({
     additionalInfo: '',
     isProcessing: false,
     repositoryUrlIsValid: true,
+    repositoryIsValid: false,
     additionalInfoIsValid: true,
     formIsValid: () => repoFormStore.repositoryUrlIsValid && repoFormStore.additionalInfoIsValid,
     resetProgress() {
         this.isProcessing = false;
+        this.repositoryIsValid = false;
     },
     setRepoUrl(repoUrl: string) {
         this.repoUrl = repoUrl;

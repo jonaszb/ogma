@@ -1,6 +1,6 @@
 <script lang="ts">
 import OgmaHeader from './components/header/OgmaHeader.vue';
-import RepoForm from './components/RepoForm.vue';
+import RepoForm from './components/repo-form/RepoForm.vue';
 import MarkdownEditor from './components/markdown/MarkdownEditor.vue';
 import ProgressIndicator from './components/ProgressIndicator.vue';
 import ToastContainer from './components/toast/ToastContainer.vue';
@@ -62,24 +62,14 @@ section {
 
 @media only screen and (max-width: 1024px) {
     section {
-        justify-content: center;
+        padding-top: 25vh;
     }
 }
 
 @media only screen and (max-width: 640px) {
     section {
-        padding-top: 6rem;
+        padding-top: 25vh;
         min-height: calc(100vh - 8rem);
     }
-}
-
-.v-enter-active,
-.v-leave-active {
-    transition: opacity 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-    opacity: 0;
 }
 </style>

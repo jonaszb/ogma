@@ -2,41 +2,21 @@
     <div class="repo-form">
         <h1>AI-powered readme generator for GitHub repositories</h1>
         <form @submit.prevent="handleSubmit">
-            <label hidden for="repository-url">GitHub repository URL</label>
-            <input
-                v-model="repoFormStore.repoUrl"
-                class="input-primary"
-                :class="{ 'input-error': !repoFormStore.repositoryUrlIsValid }"
-                id="repository-url"
-                type="text"
-                placeholder="Repository URL..."
-                @change="revalidateUrl"
-                @blur="repoFormStore.validateRepositoryUrl"
-            />
-            <div>
-                <label for="additional-info">Additional information</label>
-                <textarea
-                    v-model="repoFormStore.additionalInfo"
-                    class="input-primary"
-                    :class="{ 'input-error': !repoFormStore.additionalInfoIsValid }"
-                    id="additional-info"
-                    placeholder="e.g. required environment variables, how to run the project, etc."
-                    @change="repoFormStore.validateAdditionalInfo"
-                ></textarea>
-                <p v-if="!repoFormStore.additionalInfoIsValid" class="error-message">
-                    Character limit exceeded ({{ repoFormStore.additionalInfo.length }} / 2000)
-                </p>
-            </div>
-            <button class="btn-primary" :disabled="validating" :class="validating && 'pulse'">Generate readme</button>
+            <Transition mode="out-in" appear>
+                <UrlFormStep v-if="!repoFormStore.repositoryIsValid" />
+                <InfoFormStep v-else />
+            </Transition>
         </form>
     </div>
 </template>
 
 <script setup lang="ts">
-import { repoFormStore } from '../store/repoFormStore';
-import { toastStore } from '../store/toastStore';
-import { taskStore } from '../store/taskStore';
-import { ref, watch } from 'vue';
+import { repoFormStore } from '../../store/repoFormStore';
+import { toastStore } from '../../store/toastStore';
+import { taskStore } from '../../store/taskStore';
+import { Transition, ref, watch } from 'vue';
+import UrlFormStep from './UrlFormStep.vue';
+import InfoFormStep from './InfoFormStep.vue';
 
 defineProps<{
     repoUrl: string;
@@ -77,11 +57,6 @@ const handleSubmit = async () => {
         }
     }
 };
-const revalidateUrl = () => {
-    if (!repoFormStore.repositoryUrlIsValid) {
-        repoFormStore.validateRepositoryUrl();
-    }
-};
 
 watch(
     () => repoFormStore.additionalInfo,
@@ -92,6 +67,13 @@ watch(
 </script>
 
 <style scoped>
+section {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    width: 100%;
+    gap: 1.5rem;
+}
 .repo-form {
     display: flex;
     flex-direction: column;
@@ -108,33 +90,8 @@ watch(
     }
 
     & form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         margin-top: 3rem;
-        gap: 1.5rem;
         width: 50rem;
-
-        & button {
-            align-self: end;
-        }
-
-        > div {
-            width: 100%;
-        }
-
-        & label:not([hidden]) {
-            display: inline-block;
-            font-size: 1.5rem;
-            font-weight: 400;
-            margin-bottom: 0.5rem;
-        }
-
-        & textarea {
-            height: 12rem;
-            resize: none;
-            font-size: 1.5rem;
-        }
     }
 }
 
@@ -162,12 +119,6 @@ watch(
 
         & form {
             margin-top: 2rem;
-
-            & textarea {
-                height: 6rem;
-                padding: 1rem;
-                font-size: 1.25rem;
-            }
         }
     }
 }

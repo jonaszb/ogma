@@ -78,7 +78,7 @@ class GithubRepository:
         response.raise_for_status()
         data = response.json()
         self.repository_data = {}
-        for key in ['html_url', 'description', 'language', 'permissions', 'default_branch', 'license', 'homepage']:
+        for key in ['html_url', 'description', 'language', 'permissions', 'default_branch', 'license', 'homepage', 'size']:
             if key in data and data[key] is not None:
                 self.repository_data[key] = data[key]
 

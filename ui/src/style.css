@@ -24,6 +24,8 @@
     --sky-700: #0369a1;
     --sky-900: #0c4a6e;
     --sky-950: #082f49;
+    --color-neutral: #cbd5e1;
+    --color-neutral-dark: #94a3b8;
 
     @media screen {
         &[data-theme='dark'] {
@@ -44,7 +46,7 @@ body {
 .input-primary {
     background-color: rgba(255, 255, 255, 0.75);
     border-radius: 0.5rem;
-    border: 2px solid #cbd5e1;
+    border: 2px solid var(--color-neutral);
     width: calc(100% - 4rem);
     padding: 1.25rem 2rem;
     text-align: left;
@@ -90,7 +92,7 @@ body {
         border: 2px solid hsla(204, 80%, 16%, 0.101);
         color: var(--sky-100);
         &::placeholder {
-            color: #94a3b8;
+            color: var(--color-neutral-dark);
         }
         &:active,
         &:focus,
@@ -99,11 +101,21 @@ body {
             outline: none;
         }
     }
+
+    .btn-secondary {
+        color: var(--sky-100);
+        border: 2px solid var(--color-neutral-dark);
+
+        &:hover {
+            background-color: var(--sky-100);
+            border: 2px solid var(--sky-100);
+
+            color: var(--sky-900);
+        }
+    }
 }
 
-.btn-primary {
-    color: white;
-    background-color: var(--sky-600);
+.btn {
     font-family: 'Raleway', sans-serif;
     cursor: pointer;
     font-size: 1.5rem;
@@ -116,14 +128,45 @@ body {
     &:active,
     &:focus,
     &:hover {
-        box-shadow: 0 0 1rem 0.5rem rgba(14, 165, 233, 0.2);
         filter: brightness(1.1);
         outline: none;
     }
 }
 
+.btn-primary {
+    color: white;
+    background-color: var(--sky-600);
+
+    &:hover {
+        box-shadow: 0 0 1rem 0.5rem rgba(14, 165, 233, 0.2);
+    }
+}
+
+.btn-secondary {
+    color: var(--sky-900);
+    background-color: transparent;
+    border: 2px solid var(--color-neutral);
+    transition: all 0.1s ease-in-out;
+    box-shadow: none;
+
+    &:hover {
+        background-color: var(--sky-900);
+        color: white;
+    }
+}
+
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+
 @media only screen and (max-width: 768px) {
-    .btn-primary {
+    .btn {
         font-size: 1.25rem;
     }
 }
